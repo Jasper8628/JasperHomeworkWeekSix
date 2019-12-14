@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Weather Dashboard</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Dropdown
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">Disabled</a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-2">
+        <form action="">
+          <label for="">Search for a city:</label>
+          <input type="text" class="input">
+          <button>Search</button>
+        </form>
+        <div id="city-list">
+
+        </div>
+
+      </div>
+      <div class="col-md-10">
+        <div class="jumbotron">
+          <h1 class="weather"> weather</h1>
+          <h3 class="temp">Temperature:</h3>
+          <ul>
+            <li class="uv">UV:</li>
+            <li class="wind">Wind</li>
+            <li class="wind-dir">Wind dirction:</li>
+          </ul>
+          <div class="row">
+
+            <div class="col-md-2 jumbotron" id="Day1">
+              <h2>Day1</h2>
+              <ul>
+                <li>Temperature</li>
+                <li>Weather</li>
+                <li>UV</li>
+                <li>Wind Speed</li>
+              </ul>
+
+            </div>
+            <div class="col-md-2 jumbotron" id="Day2">
+              <h2>Day2</h2>
+              <ul>
+                <li>Temperature</li>
+                <li>Weather</li>
+                <li>UV</li>
+                <li>Wind Speed</li>
+              </ul>
+
+            </div>
+            <div class="col-md-2 jumbotron" id="Day3">
+              <h2>Day3</h2>
+              <ul>
+                <li>Temperature</li>
+                <li>Weather</li>
+                <li>UV</li>
+                <li>Wind Speed</li>
+              </ul>
+
+            </div>
+            <div class="col-md-2 jumbotron" id="Day4">
+              <h2>Day4 </h2>
+              <ul>
+                <li>Temperature</li>
+                <li>Weather</li>
+                <li>UV</li>
+                <li>Wind Speed</li>
+              </ul>
+
+            </div>
+            <div class="col-md-2 jumbotron" id="Day5">
+              <h2>Day5</h2>
+              <ul>
+                <li>Temperature</li>
+                <li>Weather</li>
+                <li>UV</li>
+                <li>Wind Speed</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    var cityList = [];
+    var cityName;
+    if (localStorage.getItem("city-list") != null) {
+      cityList = JSON.parse(localStorage.getItem("city-list"));
+    }
+    else {
+      cityList = [];
+    }
+    for (i = 0; i < cityList.length; i++) {
+      var newButton = $('<button>');
+      cityName = cityList[i];
+      newButton.text(cityName);
+      newButton.addClass("city ");
+      newButton.attr("data-name", cityName);
+      $("#city-list").append(newButton);
+    }
+
+    $("button").on("click", function (event) {
+      event.preventDefault();
+      cityName = $(".input").val();
+      var queryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&apikey=ceb5616fdd3c88ba087702db4d33ed01";
+      console.log(cityName);
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      })
+        .then(function (response) {
+
+
+          if (response.status != 404) {
+            var results = response;
+            var newButton = $('<button>');
+            newButton.text(cityName);
+            newButton.addClass("city ");
+            newButton.attr("data-name", cityName);
+            $("#city-list").append(newButton);
+            cityList.push(cityName);
+            var buffer = JSON.stringify(cityList);
+            localStorage.setItem("city-list", buffer);
+            console.log(results);
+            $(".name").text(results.city.name);
+
+            $(".weather").text(results.list[1].weather[0].main);
+            $(".temp").text(results.city.name);
+            $(".uv").text(results.city.name);
+            $(".wind").text(results.list[1].wind.speed);
+            console.log($(".wind").text());
+          }
+          else {
+            alert("check spelling");
+          }
+        });
+
+      $(".city").on("click", function () {
+        cityName = $(this).attr("data-name");
+        queryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&apikey=ceb5616fdd3c88ba087702db4d33ed01";
+        $.ajax({
+          url: queryURL,
+          method: "GET"
+        })
+          .then(function (response) {
+            var results = response;
+            console.log(results);
+            $(".name").text(results.city.name);
+
+            $(".weather").text(results.list[1].weather[0].main);
+            $(".temp").text(results.city.name);
+            $(".uv").text(results.city.name);
+            $(".wind").text(results.list[1].wind.speed);
+          });
+
+      });
+    });
+  </script>
+</body>
+
+</html>
