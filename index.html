@@ -9,116 +9,31 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            Dropdown
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </div>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#">Disabled</a>
-        </li>
-      </ul>
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form>
-    </div>
-  </nav>
   <div class="container">
     <div class="row">
       <div class="col-md-2">
         <form action="">
           <label for="">Search for a city:</label>
           <input type="text" class="input">
-          <button>Search</button>
+          <button id="search">Search</button>
         </form>
         <div id="city-list">
 
         </div>
 
       </div>
-      <div class="col-md-10">
+      <div class="col-md-11">
         <div class="jumbotron">
-          <h1 class="weather"> weather</h1>
-          <h3 class="temp">Temperature:</h3>
+          <h1 class="city"> </h1>
+          <h3 class="temp">:</h3>
           <ul>
-            <li class="uv">UV:</li>
-            <li class="wind">Wind</li>
-            <li class="wind-dir">Wind dirction:</li>
+            <li class="humidity">Humidity:</li>
+            <li class="wind-speed">Wind Speed:</li>
+            <li class="uvr">UV Index:</li>
           </ul>
-          <div class="row">
+          <div id="forecast" class="row">
 
-            <div class="col-md-2 jumbotron" id="Day1">
-              <h2>Day1</h2>
-              <ul>
-                <li>Temperature</li>
-                <li>Weather</li>
-                <li>UV</li>
-                <li>Wind Speed</li>
-              </ul>
 
-            </div>
-            <div class="col-md-2 jumbotron" id="Day2">
-              <h2>Day2</h2>
-              <ul>
-                <li>Temperature</li>
-                <li>Weather</li>
-                <li>UV</li>
-                <li>Wind Speed</li>
-              </ul>
-
-            </div>
-            <div class="col-md-2 jumbotron" id="Day3">
-              <h2>Day3</h2>
-              <ul>
-                <li>Temperature</li>
-                <li>Weather</li>
-                <li>UV</li>
-                <li>Wind Speed</li>
-              </ul>
-
-            </div>
-            <div class="col-md-2 jumbotron" id="Day4">
-              <h2>Day4 </h2>
-              <ul>
-                <li>Temperature</li>
-                <li>Weather</li>
-                <li>UV</li>
-                <li>Wind Speed</li>
-              </ul>
-
-            </div>
-            <div class="col-md-2 jumbotron" id="Day5">
-              <h2>Day5</h2>
-              <ul>
-                <li>Temperature</li>
-                <li>Weather</li>
-                <li>UV</li>
-                <li>Wind Speed</li>
-              </ul>
-            </div>
           </div>
         </div>
       </div>
@@ -127,60 +42,105 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript">
-    var cityList = [];
-    var cityName;
-    if (localStorage.getItem("city-list") != null) {
-      cityList = JSON.parse(localStorage.getItem("city-list"));
-    }
-    else {
-      cityList = [];
-    }
-    for (i = 0; i < cityList.length; i++) {
-      var newButton = $('<button>');
-      cityName = cityList[i];
-      newButton.text(cityName);
-      newButton.addClass("city ");
-      newButton.attr("data-name", cityName);
-      $("#city-list").append(newButton);
-    }
+    $(document).ready(function () {
+      var today = new Date();
+      var date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
 
-    $("button").on("click", function (event) {
-      event.preventDefault();
-      cityName = $(".input").val();
-      var queryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&apikey=ceb5616fdd3c88ba087702db4d33ed01";
-      console.log(cityName);
-      $.ajax({
-        url: queryURL,
-        method: "GET"
-      })
-        .then(function (response) {
+      var cityList = [];
+      var cityName;
+      var iconcode;
+      var uvUrl = "http://api.openweathermap.org/v3/uvi/{lat: -33.8549, lon: 151.2165}/current.json?&apikey=ceb5616fdd3c88ba087702db4d33ed01";
+      if (localStorage.getItem("city-list") != null) {
+        cityList = JSON.parse(localStorage.getItem("city-list"));
+
+      }
+      else {
+        cityList = [];
+      }
+      for (var i = 0; i < cityList.length; i++) {
+        var newButton = $('<button>');
+        cityName = cityList[i];
+        newButton.text(cityName);
+        newButton.addClass("city ");
+        newButton.attr("data-name", cityName);
+        $("#city-list").append(newButton);
+      }
+
+      $("#search").on("click", function (event) {
+        event.preventDefault();
+        $(".card").remove();
+        var input = $(".input").val();
+        cityName = input.charAt(0).toUpperCase() + input.slice(1);
+        localStorage.setItem("displayName", cityName);
+        var queryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&apikey=ceb5616fdd3c88ba087702db4d33ed01";
+        console.log(cityName);
+        $.ajax({
+          url: queryURL,
+          method: "GET"
+        })
+          .then(function (response) {
+            if (response.status != 404) {
+              var results = response;
+              console.log(results);
+              iconcode = results.list[0].weather[0].icon;
+              var iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
+              var weatherIcon = $('<img>');
+              weatherIcon.attr("src", iconurl);
+              console.log(iconurl);
+              $("h1").text(results.city.name + ":" + date + " ");
+              $("h1").append(weatherIcon);
+              $(".temp").text("temperature: " + parseInt(response.list[0].main.temp - 273) + String.fromCharCode(176));
+              $(".humidity").text("humidity: " + response.list[0].main.humidity);
+              $(".wind-speed").text("Wind Speed: " + response.list[0].wind.speed + "mph");
 
 
-          if (response.status != 404) {
-            var results = response;
-            var newButton = $('<button>');
-            newButton.text(cityName);
-            newButton.addClass("city ");
-            newButton.attr("data-name", cityName);
-            $("#city-list").append(newButton);
-            cityList.push(cityName);
-            var buffer = JSON.stringify(cityList);
-            localStorage.setItem("city-list", buffer);
-            console.log(results);
-            $(".name").text(results.city.name);
+              for (var i = 7; i < 40; i = i + 8) {
+                iconcode = response.list[i].weather[0].icon;
+                var createDiv = $('<div>');
+                createDiv.addClass("col-md-3 card");
+                var createH = $('<h2>');
+                createH.text(response.list[i].dt_txt);
+                console.log(response.list[i].dt_txt);
+                var createUL = $('<ul>');
+                var createWeatherIcon = $('<img>');
+                createWeatherIcon.attr("src", iconurl);
+                var createTemp = $('<li>');
+                var createHumidity = $('<li>');
+                var createIconLi = $('<li>');
+                createHumidity.text("humidity: " + response.list[i].main.humidity);
+                createTemp.text("temperature: " + parseInt(response.list[i].main.temp - 273) + String.fromCharCode(176));
+                createUL.append(createH);
+                createIconLi.append(createWeatherIcon);
+                createUL.append(createTemp);
+                createUL.append(createIconLi);
+                createUL.append(createHumidity);
+                createDiv.append(createUL);
+                $("#forecast").append(createDiv);
 
-            $(".weather").text(results.list[1].weather[0].main);
-            $(".temp").text(results.city.name);
-            $(".uv").text(results.city.name);
-            $(".wind").text(results.list[1].wind.speed);
-            console.log($(".wind").text());
-          }
-          else {
-            alert("check spelling");
-          }
-        });
+              }
 
+              if (cityList.indexOf(cityName) == -1) {
+                var newButton = $('<button>');
+                newButton.text(cityName);
+                newButton.addClass("city ");
+                newButton.attr("data-name", cityName);
+                $("#city-list").append(newButton);
+                cityList.push(cityName);
+              }
+              else {
+                cityList = cityList;
+              }
+              var buffer = JSON.stringify(cityList);
+              localStorage.setItem("city-list", buffer);
+            }
+            else {
+              alert("check spelling");
+            }
+          });
+
+      });
       $(".city").on("click", function () {
+        $(".card").remove();
         cityName = $(this).attr("data-name");
         queryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&apikey=ceb5616fdd3c88ba087702db4d33ed01";
         $.ajax({
@@ -190,15 +150,105 @@
           .then(function (response) {
             var results = response;
             console.log(results);
-            $(".name").text(results.city.name);
+            var valueHumidity = results.list[1].main.humidity;
+            var valueTemp = results.list[1].main.temp;
+            var valueWind = results.list[1].wind.speed;
+            iconcode = results.list[0].weather[0].icon;
+            var iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
+            var weatherIcon = $('<img>');
+            weatherIcon.attr("src", iconurl);
+            console.log(iconurl);
+            $("h1").text(results.city.name + ":" + date + " ");
+            $("h1").append(weatherIcon);
+            $(".temp").text("temperature: " + parseInt(response.list[1].main.temp - 273) + String.fromCharCode(176));
+            $(".humidity").text("humidity: " + response.list[1].main.humidity);
+            $(".wind-speed").text("Wind Speed: " + response.list[1].wind.speed + "mph");
+            for (var i = 7; i < 40; i = i + 8) {
+              iconcode = response.list[i].weather[0].icon;
+              var createDiv = $('<div>');
+              createDiv.addClass("col-md-3 card");
+              var createH = $('<h2>');
+              createH.text(response.list[i].dt_txt);
+              console.log(response.list[i].dt_txt);
+              var createUL = $('<ul>');
+              var createWeatherIcon = $('<img>');
+              createWeatherIcon.attr("src", iconurl);
+              var createTemp = $('<li>');
+              var createHumidity = $('<li>');
+              var createIconLi = $('<li>');
+              createHumidity.text("humidity: " + response.list[i].main.humidity);
+              createTemp.text("temperature: " + parseInt(response.list[i].main.temp - 273) + String.fromCharCode(176));
+              createUL.append(createH);
+              createIconLi.append(createWeatherIcon);
+              createUL.append(createTemp);
+              createUL.append(createIconLi);
+              createUL.append(createHumidity);
+              createDiv.append(createUL);
+              $("#forecast").append(createDiv);
 
-            $(".weather").text(results.list[1].weather[0].main);
-            $(".temp").text(results.city.name);
-            $(".uv").text(results.city.name);
-            $(".wind").text(results.list[1].wind.speed);
+            }
+
           });
 
       });
+
+      var displayName;
+      if (localStorage != null) {
+        displayName = localStorage.getItem("displayName");
+        var queryURL2 = "http://api.openweathermap.org/data/2.5/forecast?q=" + displayName + "&apikey=ceb5616fdd3c88ba087702db4d33ed01";
+
+        $.ajax({
+          url: queryURL2,
+          method: "GET"
+        })
+          .then(function (response) {
+
+            var results = response;
+            console.log(results);
+            iconcode = results.list[0].weather[0].icon;
+            var iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
+            var weatherIcon = $('<img>');
+            weatherIcon.attr("src", iconurl);
+            console.log(iconurl);
+            $("h1").text(results.city.name + ":" + date + " ");
+            $("h1").append(weatherIcon);
+            $(".temp").text("temperature: " + parseInt(response.list[0].main.temp - 273) + String.fromCharCode(176));
+            $(".humidity").text("humidity: " + response.list[0].main.humidity);
+            $(".wind-speed").text("Wind Speed: " + response.list[0].wind.speed + "mph");
+
+
+            for (var i = 7; i < 40; i = i + 8) {
+              iconcode = response.list[i].weather[0].icon;
+              var createDiv = $('<div>');
+              createDiv.addClass("col-md-3 card");
+              var createH = $('<h2>');
+              createH.text(response.list[i].dt_txt);
+              console.log(response.list[i].dt_txt);
+              var createUL = $('<ul>');
+              var createWeatherIcon = $('<img>');
+              createWeatherIcon.attr("src", iconurl);
+              var createTemp = $('<li>');
+              var createHumidity = $('<li>');
+              var createIconLi = $('<li>');
+              createHumidity.text("humidity: " + response.list[i].main.humidity);
+              createTemp.text("temperature: " + parseInt(response.list[i].main.temp - 273) + String.fromCharCode(176));
+              createUL.append(createH);
+              createIconLi.append(createWeatherIcon);
+              createUL.append(createTemp);
+              createUL.append(createIconLi);
+              createUL.append(createHumidity);
+              createDiv.append(createUL);
+              $("#forecast").append(createDiv);
+
+            }
+
+          });
+
+      }
+
+
+
+
     });
   </script>
 </body>
