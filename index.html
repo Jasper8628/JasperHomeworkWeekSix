@@ -6,6 +6,7 @@
   <title>Weather Dashboard</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen"/>
 </head>
 
 <body>
@@ -17,7 +18,7 @@
           <input type="text" class="input">
           <button id="search">Search</button>
         </form>
-        <div id="city-list">
+        <div class="jumbotron" id="city-list">
 
         </div>
 
@@ -97,7 +98,7 @@
               for (var i = 7; i < 40; i = i + 8) {
                 iconcode = response.list[i].weather[0].icon;
                 var createDiv = $('<div>');
-                createDiv.addClass("col-md-3 card");
+                createDiv.addClass("col-md-2 card");
                 var createH = $('<h2>');
                 createH.text(response.list[i].dt_txt);
                 console.log(response.list[i].dt_txt);
@@ -142,6 +143,7 @@
       $(".city").on("click", function () {
         $(".card").remove();
         cityName = $(this).attr("data-name");
+        console.log(cityName);
         queryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&apikey=ceb5616fdd3c88ba087702db4d33ed01";
         $.ajax({
           url: queryURL,
@@ -166,7 +168,7 @@
             for (var i = 7; i < 40; i = i + 8) {
               iconcode = response.list[i].weather[0].icon;
               var createDiv = $('<div>');
-              createDiv.addClass("col-md-3 card");
+              createDiv.addClass("col-md-2 card");
               var createH = $('<h2>');
               createH.text(response.list[i].dt_txt);
               console.log(response.list[i].dt_txt);
@@ -220,7 +222,7 @@
             for (var i = 7; i < 40; i = i + 8) {
               iconcode = response.list[i].weather[0].icon;
               var createDiv = $('<div>');
-              createDiv.addClass("col-md-3 card");
+              createDiv.addClass("col-md-2 card");
               var createH = $('<h2>');
               createH.text(response.list[i].dt_txt);
               console.log(response.list[i].dt_txt);
