@@ -98,7 +98,7 @@
               for (var i = 7; i < 40; i = i + 8) {
                 iconcode = response.list[i].weather[0].icon;
                 var createDiv = $('<div>');
-                createDiv.addClass("col-md-2 card");
+                createDiv.addClass("col-md-2 col-xs-6 col-sm-6 card");
                 var createH = $('<h2>');
                 createH.text(response.list[i].dt_txt);
                 console.log(response.list[i].dt_txt);
@@ -168,7 +168,7 @@
             for (var i = 7; i < 40; i = i + 8) {
               iconcode = response.list[i].weather[0].icon;
               var createDiv = $('<div>');
-              createDiv.addClass("col-md-2 card");
+              createDiv.addClass("col-md-2 col-sm-6 col-xs-6 card");
               var createH = $('<h2>');
               createH.text(response.list[i].dt_txt);
               console.log(response.list[i].dt_txt);
@@ -222,7 +222,7 @@
             for (var i = 7; i < 40; i = i + 8) {
               iconcode = response.list[i].weather[0].icon;
               var createDiv = $('<div>');
-              createDiv.addClass("col-md-2 card");
+              createDiv.addClass("col-md-2 col-sm-6 col-xs-6 card");
               var createH = $('<h2>');
               createH.text(response.list[i].dt_txt);
               console.log(response.list[i].dt_txt);
